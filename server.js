@@ -4,55 +4,84 @@ const cors = require("cors");
 const app = express();
 app.use(cors()); // Enable CORS for all origins
 
-// Green lines: Added pool of possible task titles and descriptions
-const taskTitles = [
-  "Go to the gym",
-  "Buy groceries",
-  "Finish homework",
-  "Prepare for meeting",
-  "Call mom",
-  "Clean the house",
-  "Water the plants",
-  "Read a book",
-  "Plan vacation",
-  "Write a blog post",
+// Green lines: Define todos with specific IDs (1 to 10)
+const todos = [
+  {
+    id: 1,
+    title: "Go to the gym",
+    description: "Complete the workout plan at the gym.",
+    completed: false,
+  },
+  {
+    id: 2,
+    title: "Buy groceries",
+    description: "Buy essential groceries from the nearby store.",
+    completed: false,
+  },
+  {
+    id: 3,
+    title: "Finish homework",
+    description: "Complete the pending assignments.",
+    completed: false,
+  },
+  {
+    id: 4,
+    title: "Prepare for meeting",
+    description: "Prepare slides for tomorrow's meeting.",
+    completed: false,
+  },
+  {
+    id: 5,
+    title: "Call mom",
+    description: "Catch up with mom about her day.",
+    completed: false,
+  },
+  {
+    id: 6,
+    title: "Clean the house",
+    description: "Tidy up the living room and kitchen.",
+    completed: false,
+  },
+  {
+    id: 7,
+    title: "Water the plants",
+    description: "Water the plants in the garden.",
+    completed: false,
+  },
+  {
+    id: 8,
+    title: "Read a book",
+    description: "Read a chapter from the current book.",
+    completed: false,
+  },
+  {
+    id: 9,
+    title: "Plan vacation",
+    description: "Research and plan for the upcoming vacation.",
+    completed: false,
+  },
+  {
+    id: 10,
+    title: "Write a blog post",
+    description: "Draft and publish a new blog post.",
+    completed: false,
+  },
 ];
 
-const taskDescriptions = [
-  "Complete the workout plan at the gym.",
-  "Buy essential groceries from the nearby store.",
-  "Complete the pending assignments.",
-  "Prepare slides for tomorrow's meeting.",
-  "Catch up with mom about her day.",
-  "Tidy up the living room and kitchen.",
-  "Water the plants in the garden.",
-  "Read a chapter from the current book.",
-  "Research and plan for the upcoming vacation.",
-  "Draft and publish a new blog post.",
-];
-
-// Green line: Helper function to generate a random todo
-function generateRandomTodo() {
-  const id = Math.floor(Math.random() * 1000); // Random ID
-  const title = taskTitles[Math.floor(Math.random() * taskTitles.length)];
-  const description =
-    taskDescriptions[Math.floor(Math.random() * taskDescriptions.length)];
-  const completed = Math.random() > 0.5; // Randomly set completion status
-
-  return { id, title, description, completed };
-}
-
-// Endpoint to fetch a todo by ID (returns a single random todo)
+// Endpoint to fetch a todo by ID
 app.get("/todo", (req, res) => {
-  const todo = generateRandomTodo(); // Generate a random todo each time
-  res.json({ todo });
+  const id = parseInt(req.query.id, 10); // Get the ID from query string
+  const todo = todos.find(t => t.id === id); // Find the todo with that specific ID
+  if (todo) {
+    res.json({ todo });
+  } else {
+    res.status(404).json({ error: "Todo not found" }); // Return error if todo not found
+  }
 });
 
-// Green line: Endpoint to fetch multiple random todos
+// Endpoint to fetch all todos (for testing or listing)
 app.get("/todos", (req, res) => {
-  const count = parseInt(req.query.count, 10) || 5; // Number of todos to generate
-  const randomTodos = Array.from({ length: count }, generateRandomTodo); // Generate multiple todos
-  res.json({ todos: randomTodos });
+  res.json({ todos });
 });
 
 // Start the server
