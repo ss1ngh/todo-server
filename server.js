@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 app.use(cors()); // Enable CORS for all origins
 
-// Pool of possible todo titles and descriptions
+// Green lines: Added pool of possible task titles and descriptions
 const taskTitles = [
   "Go to the gym",
   "Buy groceries",
@@ -31,7 +31,7 @@ const taskDescriptions = [
   "Draft and publish a new blog post.",
 ];
 
-// Helper function to generate a random todo
+// Green line: Helper function to generate a random todo
 function generateRandomTodo() {
   const id = Math.floor(Math.random() * 1000); // Random ID
   const title = taskTitles[Math.floor(Math.random() * taskTitles.length)];
@@ -42,21 +42,16 @@ function generateRandomTodo() {
   return { id, title, description, completed };
 }
 
-// Endpoint to fetch a todo by ID
+// Endpoint to fetch a todo by ID (returns a single random todo)
 app.get("/todo", (req, res) => {
-  const id = parseInt(req.query.id, 10);
-  const todo = todos.find((t) => t.id === id);
-  if (todo) {
-    res.json({ todo });
-  } else {
-    res.status(404).json({ error: "Todo not found" });
-  }
+  const todo = generateRandomTodo(); // Generate a random todo each time
+  res.json({ todo });
 });
 
-// Endpoint to fetch random todos
+// Green line: Endpoint to fetch multiple random todos
 app.get("/todos", (req, res) => {
   const count = parseInt(req.query.count, 10) || 5; // Number of todos to generate
-  const randomTodos = Array.from({ length: count }, generateRandomTodo);
+  const randomTodos = Array.from({ length: count }, generateRandomTodo); // Generate multiple todos
   res.json({ todos: randomTodos });
 });
 
